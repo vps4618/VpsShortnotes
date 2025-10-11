@@ -38,7 +38,9 @@ namespace shortNotesApp
         protected void Page_Load(object sender, EventArgs e)
         {
             try
+                
             {
+                
                 // set theme
                 string theme = Session["Theme"] as string ?? "b"; // Default to "b"
                 ApplyThemeToControls(theme);

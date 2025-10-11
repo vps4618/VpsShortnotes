@@ -113,32 +113,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--Help to get name and log user info-->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let name = localStorage.getItem('userName');
-            if (!name) {
-                name = prompt("Please enter your name:");
-                if (name) localStorage.setItem('userName', name);
-            }
-            // Send name to server via AJAX
-            if (name) {
-                fetch('ShortNotesMain.aspx/LogUserName', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userName: name })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Optionally handle server response
-                        console.log(data);
-                    })
-                    .catch(err => {
-                        console.error('Error sending user name:', err);
-                    });
-            }
-        });
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          // Check if we already logged user data in this session
+          if (!sessionStorage.getItem('userLogged')) {
+              let name = localStorage.getItem('userName');
+              if (!name) {
+                  name = prompt("Please enter your name:");
+                  if (name) localStorage.setItem('userName', name);
+              }
+              // Send to server only the first time
+              if (name) {
+                  fetch('ShortNotesMain.aspx/LogUserName', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ userName: name })
+                  })
+                      .then(response => response.json())
+                      .then(data => {
+                          // Mark as logged
+                          sessionStorage.setItem('userLogged', 'true');
+                      })
+                      .catch(err => {
+                          console.error('Error sending user name:', err);
+                      });
+              }
+          }
+      });
+  </script>
     </script>
 </head>
 <body>
