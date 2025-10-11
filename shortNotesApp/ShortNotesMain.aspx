@@ -118,12 +118,26 @@
             let name = localStorage.getItem('userName');
             if (!name) {
                 name = prompt("Please enter your name:");
-                if (name) {
-                    localStorage.setItem('userName', name);
-                }
+                if (name) localStorage.setItem('userName', name);
             }
-            // Set hidden field value
-            var hiddenField = document.getElementById('<%= hdnUserName.ClientID %>');
+            // Send name to server via AJAX
+            if (name) {
+                fetch('ShortNotesMain.aspx/LogUserName', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userName: name })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Optionally handle server response
+                        console.log(data);
+                    })
+                    .catch(err => {
+                        console.error('Error sending user name:', err);
+                    });
+            }
         });
     </script>
 </head>

@@ -8,31 +8,37 @@ using System.Data;
 using System.Web.Configuration;
 using System.Data.SqlClient;
 using System.Net.Mail;
+using System.Web.Services;
+using System.Web.Script.Services;
 
 namespace shortNotesApp
 {
     public partial class ShortNotesMain : System.Web.UI.Page
     {
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static string LogUserName(string userName)
+        {
+            // Log user name to file
+            string logPath = HttpContext.Current.Server.MapPath("~/user_access_log.txt");
+            string accessTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string userIP = HttpContext.Current.Request.UserHostAddress;
+            string userAgent = HttpContext.Current.Request.UserAgent;
+
+            string logEntry = $"Time: {accessTime}, Name: {userName}, IP: {userIP}, Agent: {userAgent}\n";
+            System.IO.File.AppendAllText(logPath, logEntry);
+
+            // Optionally send email here as well
+            SendLogEmail(logEntry);
+
+
+            return "{\"status\":\"success\"}";
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                // Normal page logic (e.g., logging, etc.)
-                // tracing user info
-                string userIP = Request.UserHostAddress;
-                string userAgent = Request.UserAgent;
-                string accessTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                string userName = hdnUserName.Value;                
-                if (string.IsNullOrEmpty(userName))
-                    userName = "Unknown";
-
-                string logPath = Server.MapPath("~/user_access_log.txt");
-                string logEntry = $"Time: {accessTime}, Name: {userName}, IP: {userIP}, Agent: {userAgent}\n";
-                System.IO.File.AppendAllText(logPath, logEntry);
-
-                // Send email notification
-                SendLogEmail(logEntry);
-
                 // set theme
                 string theme = Session["Theme"] as string ?? "b"; // Default to "b"
                 ApplyThemeToControls(theme);
@@ -44,7 +50,7 @@ namespace shortNotesApp
                 string body = $"Exception Message: {ex.Message}\nStack Trace:\n{ex.StackTrace}";
 
                 // Call your send email function
-                SendLogEmail(subject, body);
+                SendLogEmailExceptions(subject, body);
 
                 // Optionally rethrow or handle as needed
                 // throw; // or show a user-friendly message
@@ -52,7 +58,7 @@ namespace shortNotesApp
         }
 
         // send email when exception occurring
-        private void SendLogEmail(string subject, string body)
+        public void SendLogEmailExceptions(string subject, string body)
         {
             try
             {
@@ -75,7 +81,7 @@ namespace shortNotesApp
             }
         }
 
-        private void SendLogEmail(string logEntry)
+        public static void SendLogEmail(string logEntry)
         {
             try
             {
