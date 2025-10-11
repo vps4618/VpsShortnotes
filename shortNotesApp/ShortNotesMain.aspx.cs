@@ -15,6 +15,28 @@ namespace shortNotesApp
 {
     public partial class ShortNotesMain : System.Web.UI.Page
     {
+        // This will use to send user messages to owner email
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static string SendContactMessage(string userName, string userMessage)
+        {
+            // Compose email with both name and message
+            MailMessage mail = new MailMessage();
+            mail.To.Add("vishwapraveen30145@gmail.com");
+            mail.Subject = "Contact Message from Short Notes";
+            mail.Body = $"Message from user: {userName}\n\n{userMessage}";
+            mail.From = new MailAddress("vishwapraveen4618@gmail.com");
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
+            smtp.Credentials = new System.Net.NetworkCredential("vishwapraveen4618@gmail.com", "pvpc nnno kmjt nzyh");
+            smtp.EnableSsl = true;
+            smtp.Send(mail);
+
+            return "{\"status\":\"sent\"}";
+        }
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string LogUserName(string userName)

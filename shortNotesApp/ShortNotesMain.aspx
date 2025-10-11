@@ -39,6 +39,13 @@
             right: 10px;
             z-index: 999;
         }
+
+        .toggle-btn-2 {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+            z-index: 999;
+        }
     </style>
     <style>
         iframe[src*="somee.com"],
@@ -64,6 +71,10 @@
                 setThemeToSession(currentTheme);
             });
 
+            $("#contactMeLink").on("click", function () {
+                sendContactMessage();
+            });
+
             function changeTheme(theme) {
                 // Change page background and content
                 $("[data-role='page']")
@@ -82,6 +93,26 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             });
+        }
+
+        // this will send message to owner
+        function sendContactMessage() {
+            var name = localStorage.getItem('userName');
+            var message = prompt("Please enter your message.(If you need further help, also mention your whatsapp number or email)");
+            if (name && name.trim() && message && message.trim()) {
+                $.ajax({
+                    type: "POST",
+                    url: "ShortNotesMain.aspx/SendContactMessage",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ userName: name, userMessage: message }),
+                    success: function () {
+                        alert("Your message has been sent!");
+                    },
+                    error: function () { alert("Failed to send message."); }
+                });
+            } else {
+                alert("Please enter your message.");
+            }
         }
     </script>
     <style>
@@ -113,37 +144,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--Help to get name and log user info-->
-  <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          // Check if we already logged user data in this session
-          if (!sessionStorage.getItem('userLogged')) {
-              let name = localStorage.getItem('userName');
-              if (!name) {
-                  name = prompt("Please enter your name:");
-                  if (name) localStorage.setItem('userName', name);
-              }
-              // Send to server only the first time
-              if (name) {
-                  fetch('ShortNotesMain.aspx/LogUserName', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({ userName: name })
-                  })
-                      .then(response => response.json())
-                      .then(data => {
-                          // Mark as logged
-                          sessionStorage.setItem('userLogged', 'true');
-                      })
-                      .catch(err => {
-                          console.error('Error sending user name:', err);
-                      });
-              }
-          }
-      });
-  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if we already logged user data in this session
+            if (!sessionStorage.getItem('userLogged')) {
+                let name = localStorage.getItem('userName');
+                if (!name) {
+                    name = prompt("Please enter your name:");
+                    if (name) localStorage.setItem('userName', name);
+                }
+                // Send to server only the first time
+                if (name) {
+                    fetch('ShortNotesMain.aspx/LogUserName', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userName: name })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Mark as logged
+                            sessionStorage.setItem('userLogged', 'true');
+                        })
+                        .catch(err => {
+                            console.error('Error sending user name:', err);
+                        });
+                }
+            }
+        });
+/*
+        document.getElementById('contactLink').onclick = function (e) {
+            e.preventDefault();
+            var message = prompt("Type your message for the site owner:");
+            var name = localStorage.getItem('userName');
+            if (name && name.trim() && message && message.trim()) {
+                $.ajax({
+                    type: "POST",
+                    url: "ShortNotesMain.aspx/SendContactMessage",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ userName: name, userMessage: message }),
+                    success: function () {
+                        alert("Your message has been sent!");
+                        $('#contactPopup').popup('close');
+                        $('#contactMessage').val(""); // Clear
+                        $('#contactName').val("");
+                    },
+                    error: function () { alert("Failed to send message."); }
+                });
+            } else {
+                alert("Please enter your name and message.");
+            }
+        };*/
     </script>
+
 </head>
 <body>
 
@@ -173,6 +227,8 @@
         <div runat="server" data-role="page" id="home" data-theme="b">
             <div data-role="header">
                 Short Notes
+                <!--If data-role='none' then jquery styling not will affect to this element-->
+                   <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color:lightgray;background-color:darkslateblue;padding:3px">Contact Me (සම්බන්ධ කරගැනීමට)</a>
             </div>
             <div data-role="content">
                 <div class="half-height">
@@ -204,13 +260,15 @@
                             <asp:BoundField DataField="LessonNo" HeaderText="Lesson No." />
                         </Columns>
                     </asp:GridView>
-                    <a href="#" id="toggleTheme" class="ui-btn ui-btn-icon-notext ui-icon-refresh toggle-btn" title="Toggle Theme">Toggle</a>
+                    <a href="#" id="toggleTheme" class="ui-btn ui-btn-icon-notext ui-icon-refresh toggle-btn" title="Toggle Theme" style="display:none" >Toggle</a>
 
                 </div>
             </div>
         </div>
 
     </form>
+
+   
 
     <!--this script is needed for properly work auto extender with jquery mobile-->
     <script type="text/javascript">
