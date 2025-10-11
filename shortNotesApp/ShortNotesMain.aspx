@@ -111,6 +111,21 @@
             }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Help to get name and log user info-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let name = localStorage.getItem('userName');
+            if (!name) {
+                name = prompt("Please enter your name:");
+                if (name) {
+                    localStorage.setItem('userName', name);
+                }
+            }
+            // Set hidden field value
+            var hiddenField = document.getElementById('<%= hdnUserName.ClientID %>');
+        });
+    </script>
 </head>
 <body>
 
@@ -131,6 +146,7 @@
 
     <!--here data-ajax=false used for fix not loading name list when enter pressed on text box and post back with jquery mobile-->
     <form id="form1" runat="server" data-ajax="false" defaultbutton="btnSearch">
+        <asp:HiddenField ID="hdnUserName" runat="server" />
         <!--
             don't wrap div with data-role=content inside data-role=page . then autocompleteextender will not work.style for div style="height:100vh" will cause not working auto completer-->
 

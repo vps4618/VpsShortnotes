@@ -21,6 +21,9 @@ namespace shortNotesApp
 "insertchem", "~/InsertShortNotesChemistry.aspx");
             RouteTable.Routes.MapPageRoute("shortnotes-insert-phy",
 "insertphy", "~/InsertShortNotesPhysics.aspx");
+            RouteTable.Routes.MapPageRoute("shortnotes-user-access-log-view",
+"useraccesslog", "~/user_access_log.aspx");
+
         }
 
         protected void Session_Start(object sender, EventArgs e)

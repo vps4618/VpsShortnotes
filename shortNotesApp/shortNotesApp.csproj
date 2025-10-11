@@ -93,6 +93,7 @@
     <Content Include="InsertShortNotesPhysics.aspx" />
     <Content Include="InsertShortNotesChemistry.aspx" />
     <Content Include="InsertShortNotesCombinedMaths.aspx" />
+    <Content Include="loginToViewLog.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
@@ -127,6 +128,8 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="ShortNotesMain.aspx" />
+    <Content Include="user_access_log.aspx" />
+    <Content Include="user_access_log.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +157,13 @@
     <Compile Include="InsertShortNotesCombinedMaths.aspx.designer.cs">
       <DependentUpon>InsertShortNotesCombinedMaths.aspx</DependentUpon>
     </Compile>
+    <Compile Include="loginToViewLog.aspx.cs">
+      <DependentUpon>loginToViewLog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="loginToViewLog.aspx.designer.cs">
+      <DependentUpon>loginToViewLog.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortNotesMain.aspx.cs">
       <DependentUpon>ShortNotesMain.aspx</DependentUpon>
@@ -161,6 +171,13 @@
     </Compile>
     <Compile Include="ShortNotesMain.aspx.designer.cs">
       <DependentUpon>ShortNotesMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="user_access_log.aspx.cs">
+      <DependentUpon>user_access_log.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="user_access_log.aspx.designer.cs">
+      <DependentUpon>user_access_log.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

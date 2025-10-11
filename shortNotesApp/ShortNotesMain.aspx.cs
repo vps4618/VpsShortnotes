@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Web.Configuration;
 using System.Data.SqlClient;
+using System.Net.Mail;
 
 namespace shortNotesApp
 {
@@ -14,11 +15,88 @@ namespace shortNotesApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // set theme
-            string theme = Session["Theme"] as string ?? "b"; // Default to "b"
-            ApplyThemeToControls(theme);
+            try
+            {
+                // Normal page logic (e.g., logging, etc.)
+                // tracing user info
+                string userIP = Request.UserHostAddress;
+                string userAgent = Request.UserAgent;
+                string accessTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string userName = hdnUserName.Value;                
+                if (string.IsNullOrEmpty(userName))
+                    userName = "Unknown";
+
+                string logPath = Server.MapPath("~/user_access_log.txt");
+                string logEntry = $"Time: {accessTime}, Name: {userName}, IP: {userIP}, Agent: {userAgent}\n";
+                System.IO.File.AppendAllText(logPath, logEntry);
+
+                // Send email notification
+                SendLogEmail(logEntry);
+
+                // set theme
+                string theme = Session["Theme"] as string ?? "b"; // Default to "b"
+                ApplyThemeToControls(theme);
+            }
+            catch (Exception ex)
+            {
+                // Prepare your email body with exception details
+                string subject = "Exception in shortnotes.aspx";
+                string body = $"Exception Message: {ex.Message}\nStack Trace:\n{ex.StackTrace}";
+
+                // Call your send email function
+                SendLogEmail(subject, body);
+
+                // Optionally rethrow or handle as needed
+                // throw; // or show a user-friendly message
+            }
         }
 
+        // send email when exception occurring
+        private void SendLogEmail(string subject, string body)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.To.Add("vishwapraveen30145@gmail.com");
+                mail.Subject = subject;
+                mail.Body = body;
+                mail.From = new MailAddress("vishwapraveen4618@gmail.com");
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential("vishwapraveen4618@gmail.com", "pvpc nnno kmjt nzyh");
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+            catch (Exception emailEx)
+            {
+                // Optional: log email sending errors somewhere, but don’t throw further
+            }
+        }
+
+        private void SendLogEmail(string logEntry)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.To.Add("vishwapraveen30145@gmail.com");
+                mail.Subject = "New User Access Log Entry";
+                mail.Body = logEntry;
+                mail.From = new MailAddress("vishwapraveen4618@gmail.com"); // Use a valid sender email
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com"; // Your SMTP server
+                smtp.Port = 587; // Or your SMTP port
+                smtp.Credentials = new System.Net.NetworkCredential("vishwapraveen4618@gmail.com", "pvpc nnno kmjt nzyh");
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                // Optionally log email errors
+            }
+        }
 
         // SAVE THEME
         [System.Web.Services.WebMethod]
