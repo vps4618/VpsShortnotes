@@ -228,7 +228,7 @@
             <div data-role="header">
                 Short Notes
                 <!--If data-role='none' then jquery styling not will affect to this element-->
-                   <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color:lightgray;background-color:darkslateblue;padding:3px">Contact Me (සම්බන්ධ කරගැනීමට)</a>
+                   <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color:lightgray;background-color:darkslateblue;font-family:'Segoe UI';font-style:">Contact Me (සම්බන්ධ කරගැනීමට)</a>
             </div>
             <div data-role="content">
                 <div class="half-height">
