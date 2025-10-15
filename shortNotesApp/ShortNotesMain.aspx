@@ -160,18 +160,18 @@
                     isValid = false;
                 } else if (name.length < 6) {
                     isValid = false;
-                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊)");
+                    alert("Please enter your correct full name (it makes me happy knowing someone real is using my web app 😊)");
                 } else if (parts1.length < 2) {
                     isValid = false
-                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊");
+                    alert("Please enter your correct full name (it makes me happy knowing someone real is using my web app 😊)");
                 } else if (!namePattern.test(name)) {
                     isValid = false
-                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊");
+                    alert("Please enter your correct full name (it makes me happy knowing someone real is using my web app 😊)");
                 }
             
                 let nameInput = "";
                 while (isValid == false) {
-                    nameInput = prompt("Please enter your full name (This makes me happy when I see that someone real is getting help from my web app😊):").trim();
+                    nameInput = prompt("Please enter your full name — it makes me happy knowing someone real is using my web app 😊:").trim();
 
                     // Check cancel
                     if (nameInput === null) {
