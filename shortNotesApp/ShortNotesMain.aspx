@@ -155,6 +155,7 @@
                 // Split into parts
                 let parts1 = name.split(/\s+/).filter(p => p.length > 0);
 
+                // check last update's usernames are correct
                 let isValid = true;
                 if (!name) {
                     isValid = false;
@@ -171,8 +172,17 @@
             
                 let nameInput = "";
                 while (isValid == false) {
-                    nameInput = prompt("Please enter your full name — it makes me happy knowing someone real is using my web app 😊:").trim();
+                    nameInput = prompt("Please enter your full name — it makes me happy knowing someone real is using my web app 😊:");
 
+                    // checking is prompt canceled
+                    if( nameInput == null){
+                        continue;
+                    }
+
+                    // otherwise not canceled
+
+
+                    nameInput = nameInput.trim();
                     // Check cancel
                     if (nameInput === null) {
                         alert("You must enter your name to continue.");
