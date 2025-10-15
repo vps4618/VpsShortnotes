@@ -149,10 +149,66 @@
             // Check if we already logged user data in this session
             if (!sessionStorage.getItem('userLogged')) {
                 let name = localStorage.getItem('userName');
+                let namePattern = /^[\u0D80-\u0DFF\u0B80-\u0BFFA-Za-z\s]+$/;
+
+
+                // Split into parts
+                let parts1 = name.split(/\s+/).filter(p => p.length > 0);
+
+                let isValid = true;
                 if (!name) {
-                    name = prompt("Please enter your name:");
+                    isValid = false;
+                } else if (name.length < 6) {
+                    isValid = false;
+                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊)");
+                } else if (parts1.length < 2) {
+                    isValid = false
+                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊");
+                } else if (!namePattern.test(name)) {
+                    isValid = false
+                    alert("Please enter your correct full name. (This helps me to get some happiness by seeing that someone real is getting help from my web app.😊");
+                }
+            
+                let nameInput = "";
+                while (isValid == false) {
+                    nameInput = prompt("Please enter your full name (This makes me happy when I see that someone real is getting help from my web app😊):").trim();
+
+                    // Check cancel
+                    if (nameInput === null) {
+                        alert("You must enter your name to continue.");
+                        continue;
+                    }
+
+                    // Split into parts
+                    let parts = nameInput.split(/\s+/).filter(p => p.length > 0);
+
+                    if (nameInput.length < 6) {
+                        alert("⚠️ Please enter your correct full name.");
+                        continue;
+                    }
+
+                    if (parts.length < 2) {
+                        alert("⚠️ Please enter your full name (at least two parts).");
+                        continue;
+                    }
+
+                    if (!namePattern.test(nameInput)) {
+                        alert("⚠️ Name can only contain Sinhala, Tamil, or English letters and spaces.");
+                        continue;
+                    }
+
+                    // Capitalize each word
+                    nameInput = nameInput.replace(/\b\w/g, c => c.toUpperCase());
+
+                    alert("✅ Welcome, " + nameInput + "!");
+                    break; // Exit loop when valid
+                }
+
+                if (!name || isValid == false) {
+                    name = nameInput;
                     if (name) localStorage.setItem('userName', name);
                 }
+
                 // Send to server only the first time
                 if (name) {
                     fetch('ShortNotesMain.aspx/LogUserName', {
