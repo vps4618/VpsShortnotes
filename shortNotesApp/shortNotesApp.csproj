@@ -128,6 +128,7 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="ShortNotesMain.aspx" />
+    <Content Include="testingName.aspx" />
     <Content Include="user_access_log.aspx" />
     <Content Include="user_access_log.txt" />
     <Content Include="Web.config" />
@@ -171,6 +172,13 @@
     </Compile>
     <Compile Include="ShortNotesMain.aspx.designer.cs">
       <DependentUpon>ShortNotesMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="testingName.aspx.cs">
+      <DependentUpon>testingName.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="testingName.aspx.designer.cs">
+      <DependentUpon>testingName.aspx</DependentUpon>
     </Compile>
     <Compile Include="user_access_log.aspx.cs">
       <DependentUpon>user_access_log.aspx</DependentUpon>
