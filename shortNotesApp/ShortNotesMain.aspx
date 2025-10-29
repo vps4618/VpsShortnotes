@@ -163,7 +163,11 @@
                     let isValid = true;
                     if (!name) {
                         isValid = false;
-                    } else if (name.length < 6) {
+                    } else if (name == "Mahinda Mahattaya") {
+                        isValid = false;
+                        alert("Please be kind enough to enter a real full name 😊");
+                    }
+                    else if (name.length < 6) {
                         isValid = false;
                         alert("Please enter your correct full name (it makes me happy knowing someone real is using my web app 😊)");
                     } else if (parts1.length < 2) {
