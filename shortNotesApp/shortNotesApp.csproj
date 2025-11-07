@@ -93,6 +93,8 @@
     <Content Include="InsertShortNotesPhysics.aspx" />
     <Content Include="InsertShortNotesChemistry.aspx" />
     <Content Include="InsertShortNotesCombinedMaths.aspx" />
+    <Content Include="AdminSubjects.aspx" />
+    <Content Include="Notes.aspx" />
     <Content Include="loginToViewLog.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -158,6 +160,15 @@
     <Compile Include="InsertShortNotesCombinedMaths.aspx.designer.cs">
       <DependentUpon>InsertShortNotesCombinedMaths.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AdminSubjects.aspx.cs">
+      <DependentUpon>AdminSubjects.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Notes.aspx.cs">
+      <DependentUpon>Notes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Code\DataAccess.cs" />
     <Compile Include="loginToViewLog.aspx.cs">
       <DependentUpon>loginToViewLog.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -194,6 +205,8 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <None Include="packages.config" />
+    <None Include="db\schema.sql" />
+    <None Include="README_DYNAMIC.md" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery.mobile-1.4.5.min.map" />
