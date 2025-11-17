@@ -1,0 +1,4 @@
+﻿# add sequrity in all pages , with caching
+# add jquery to all pages
+# check all the things working
+# in subjects, i need to remove,update also happen, there also must change table name when pdating

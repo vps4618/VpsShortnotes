@@ -129,6 +129,7 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="ShortNotesMain.aspx" />
     <Content Include="testingName.aspx" />
+    <Content Include="to-do.txt" />
     <Content Include="user_access_log.aspx" />
     <Content Include="user_access_log.txt" />
     <Content Include="Web.config" />

@@ -71,38 +71,41 @@ namespace shortNotesApp
                 // set subject name in autoextender
                 if (!IsPostBack)
                 {
+
+                    try
+                    {
+                        // load subjects to drop down list
+                        string selectSQL = "SELECT name FROM subjects";
+
+                        SqlConnection con = new SqlConnection(conString);
+                        SqlCommand cmd = new SqlCommand(selectSQL, con);
+                        SqlDataReader reader;
+
+                        con.Open();
+                        reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            ListItem newItem = new ListItem();
+                            newItem.Text = reader["name"].ToString();
+                            newItem.Value = reader["name"].ToString();
+                            lstSubjects.Items.Add(newItem);
+                        }
+                    }
+                    catch (Exception error)
+                    {
+                        lblError.Text = error.Message;
+                        lblError.ForeColor = System.Drawing.Color.Red;
+                    }
+
                     autoComplete1.ContextKey = lstSubjects.SelectedValue;
+
                 }
 
                 // set theme
                 string theme = Session["Theme"] as string ?? "b"; // Default to "b"
                 ApplyThemeToControls(theme);
 
-                try
-                {
-                    // load subjects to drop down list
-                    string selectSQL = "SELECT name FROM subjects";
-
-                    SqlConnection con = new SqlConnection(conString);
-                    SqlCommand cmd = new SqlCommand(selectSQL, con);
-                    SqlDataReader reader;
-
-                    con.Open();
-                    reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        ListItem newItem = new ListItem();
-                        newItem.Text = reader["name"].ToString();
-                        newItem.Value = "";
-                        lstSubjects.Items.Add(newItem);
-                    }
-                }
-                catch (Exception error)
-                {
-                    lblError.Text = error.Message;
-                    lblError.ForeColor = System.Drawing.Color.Red;
-                }
 
             }
             catch (Exception ex)
@@ -264,7 +267,7 @@ namespace shortNotesApp
             if (txtName.Text.Trim() != "")
             {
                 string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
-                string selectedSubject = lstSubjects.SelectedItem.Text;
+                string selectedSubject = lstSubjects.SelectedItem.Text.Replace(" ","");
                 DataSet dtContent = new DataSet();
                 string searchText = "%" + txtName.Text + "%";
 
@@ -297,7 +300,7 @@ namespace shortNotesApp
         protected void btnGetAll_Click(object sender, EventArgs e)
         {
             string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
-            string selectedSubject = lstSubjects.SelectedItem.Text;
+            string selectedSubject = lstSubjects.SelectedItem.Text.Replace(" ","");
             DataSet dtContent = new DataSet();
 
             try

@@ -309,7 +309,7 @@
                     <asp:ScriptManager ID="ScriptManager1" runat="server">
                     </asp:ScriptManager>
                     Subject : 
-            <asp:DropDownList runat="server" ID="lstSubjects" OnSelectedIndexChanged="lstSubjects_SelectedIndexChanged" AutoPostBack="true">
+            <asp:DropDownList runat="server" ID="lstSubjects" OnSelectedIndexChanged="lstSubjects_SelectedIndexChanged" ViewStateMode="Enabled" EnableViewState="true" AutoPostBack="true">
             </asp:DropDownList>
                     Title : 
             <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
