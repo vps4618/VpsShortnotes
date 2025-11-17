@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data.Sql;
-using System.Data.SqlClient;
 
 namespace shortNotesApp
 {
-    public partial class InsertShortNotesPhysics : System.Web.UI.Page
+    public partial class InsertShortNotesCombinedMaths : System.Web.UI.Page
     {
-        string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
+        string conString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             lblInfo1.Text = "";
@@ -21,6 +20,35 @@ namespace shortNotesApp
             {
                 pnlContent.Visible = false;
                 pnlPwd.Visible = true;
+                pnlSelect.Visible = false;
+
+
+                try
+                {
+                    // load subjects to drop down list
+                    string selectSQL = "SELECT name FROM subjects";
+
+                    SqlConnection con = new SqlConnection(conString);
+                    SqlCommand cmd = new SqlCommand(selectSQL, con);
+                    SqlDataReader reader;
+
+                    con.Open();
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        ListItem newItem = new ListItem();
+                        newItem.Text = reader["name"].ToString();
+                        newItem.Value = reader["name"].ToString();
+                        lstSubjects.Items.Add(newItem);
+                    }
+                }
+                catch (Exception error)
+                {
+                    lblInfo1.Text = error.Message;
+                    lblInfo1.ForeColor = System.Drawing.Color.Red;
+                }
+
             }
         }
 
@@ -32,8 +60,10 @@ namespace shortNotesApp
             string username = WebConfigurationManager.ConnectionStrings["Username"].ConnectionString;
             if(password == txtPwd.Text && username == txtUName.Text)
             {
-                pnlContent.Visible = true;
+                pnlContent.Visible = false;
                 pnlPwd.Visible = false;
+                pnlSelect.Visible = true;
+
             }
             else
             {
@@ -101,51 +131,29 @@ namespace shortNotesApp
             }
         }
 
-        protected void sourceShortNotes_Inserting(object sender, SqlDataSourceCommandEventArgs e)
+        protected void btnSelect_Click(object sender, EventArgs e)
         {
-            
-            
-        }
+            string tableName = lstSubjects.SelectedItem.Text;
+            lblHeading.Text = "Insert Short Notes"+tableName;
 
-        // check for similar titles . if so cancel the transaction
-        protected void dtlView_ItemInserting(object sender, DetailsViewInsertEventArgs e)
-        {
-            try
-            {
-                string title = e.Values["Title"]?.ToString();
+            tableName = tableName.Replace(" ", "");
 
-                if (IsTitleExists(title))
-                {
-                    // Cancel the insert
-                    e.Cancel = true;
+            // Build dynamic SQL based on table name
+            sourceShortNotes.SelectCommand = $"SELECT * FROM ShortNotes{tableName}";
+            sourceShortNotes.InsertCommand =
+                $"INSERT INTO ShortNotes{tableName} (Title,LessonNo,Link,Optional1,Optional2,Optional3) " +
+                $"VALUES (@Title,@LessonNo,@Link,@Optional1,@Optional2,@Optional3)";
+            sourceShortNotes.UpdateCommand =
+                $"UPDATE ShortNotes{tableName} SET Title=@Title,LessonNo=@LessonNo,Link=@Link,Optional1=@Optional1," +
+                $"Optional2=@Optional2,Optional3=@Optional3 WHERE Id=@Id";
+            sourceShortNotes.DeleteCommand = $"DELETE FROM ShortNotes{tableName} WHERE Id=@Id";
 
-                    // Show a message
-                    lblInfo1.ForeColor = System.Drawing.Color.Red;
-                    lblInfo1.Text = "The item with this Title already exists.";
-                }
-            }catch(Exception error)
-            {
-                lblInfo1.ForeColor = System.Drawing.Color.Red;
-                lblInfo1.Text = error.Message;
-            }
-        }
+            // Refresh data
+            sourceShortNotes.DataBind();
+            dtlView.DataBind();
 
-        private bool IsTitleExists(string Title)
-        {
-            bool exists = false;
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT COUNT(*) FROM ShortNotesPhysics WHERE Title=@Title";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Title", Title);
-
-                conn.Open();
-                int count = (int)cmd.ExecuteScalar();
-
-                exists = count > 0;
-            }
-                return exists;
+            pnlSelect.Visible = false;
+            pnlContent.Visible = true;
         }
     }
 }

@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AddSubjects.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -90,10 +91,9 @@
     <Content Include="Content\jquery.mobile.theme-1.4.5.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
-    <Content Include="InsertShortNotesPhysics.aspx" />
-    <Content Include="InsertShortNotesChemistry.aspx" />
-    <Content Include="InsertShortNotesCombinedMaths.aspx" />
+    <Content Include="InsertShortNotes.aspx" />
     <Content Include="loginToViewLog.aspx" />
+    <Content Include="routes.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
@@ -134,29 +134,22 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddSubjects.aspx.cs">
+      <DependentUpon>AddSubjects.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddSubjects.aspx.designer.cs">
+      <DependentUpon>AddSubjects.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="InsertShortNotesPhysics.aspx.cs">
-      <DependentUpon>InsertShortNotesPhysics.aspx</DependentUpon>
+    <Compile Include="InsertShortNotes.aspx.cs">
+      <DependentUpon>InsertShortNotes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="InsertShortNotesPhysics.aspx.designer.cs">
-      <DependentUpon>InsertShortNotesPhysics.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InsertShortNotesChemistry.aspx.cs">
-      <DependentUpon>InsertShortNotesChemistry.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InsertShortNotesChemistry.aspx.designer.cs">
-      <DependentUpon>InsertShortNotesChemistry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InsertShortNotesCombinedMaths.aspx.cs">
-      <DependentUpon>InsertShortNotesCombinedMaths.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InsertShortNotesCombinedMaths.aspx.designer.cs">
-      <DependentUpon>InsertShortNotesCombinedMaths.aspx</DependentUpon>
+    <Compile Include="InsertShortNotes.aspx.designer.cs">
+      <DependentUpon>InsertShortNotes.aspx</DependentUpon>
     </Compile>
     <Compile Include="loginToViewLog.aspx.cs">
       <DependentUpon>loginToViewLog.aspx</DependentUpon>
@@ -166,6 +159,13 @@
       <DependentUpon>loginToViewLog.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="routes.aspx.cs">
+      <DependentUpon>routes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="routes.aspx.designer.cs">
+      <DependentUpon>routes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ShortNotesMain.aspx.cs">
       <DependentUpon>ShortNotesMain.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

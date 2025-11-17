@@ -15,14 +15,14 @@ namespace shortNotesApp
         {
             // shortnotes route not added because then auto complete doesn't work.so url mapping added.
 
-            RouteTable.Routes.MapPageRoute("shortnotes-insert-cmaths",
-"insertcmaths", "~/InsertShortNotesCombinedMaths.aspx");
-            RouteTable.Routes.MapPageRoute("shortnotes-insert-chem",
-"insertchem", "~/InsertShortNotesChemistry.aspx");
-            RouteTable.Routes.MapPageRoute("shortnotes-insert-phy",
-"insertphy", "~/InsertShortNotesPhysics.aspx");
+            RouteTable.Routes.MapPageRoute("shortnotes-insert",
+"insertnotes", "~/InsertShortNotes.aspx");
             RouteTable.Routes.MapPageRoute("shortnotes-user-access-log-view",
 "useraccesslog", "~/user_access_log.aspx");
+            RouteTable.Routes.MapPageRoute("shortnotes-view-routes",
+"routes", "~/routes.aspx");
+            RouteTable.Routes.MapPageRoute("shortnotes-name-testing",
+"testname", "~/testingName.aspx");
 
         }
 

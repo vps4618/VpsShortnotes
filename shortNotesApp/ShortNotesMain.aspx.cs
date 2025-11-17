@@ -10,11 +10,16 @@ using System.Data.SqlClient;
 using System.Net.Mail;
 using System.Web.Services;
 using System.Web.Script.Services;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace shortNotesApp
 {
     public partial class ShortNotesMain : System.Web.UI.Page
     {
+
+        string conString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
+
         // This will use to send user messages to owner email
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -60,12 +65,45 @@ namespace shortNotesApp
         protected void Page_Load(object sender, EventArgs e)
         {
             try
-                
+
             {
-                
+
+                // set subject name in autoextender
+                if (!IsPostBack)
+                {
+                    autoComplete1.ContextKey = lstSubjects.SelectedValue;
+                }
+
                 // set theme
                 string theme = Session["Theme"] as string ?? "b"; // Default to "b"
                 ApplyThemeToControls(theme);
+
+                try
+                {
+                    // load subjects to drop down list
+                    string selectSQL = "SELECT name FROM subjects";
+
+                    SqlConnection con = new SqlConnection(conString);
+                    SqlCommand cmd = new SqlCommand(selectSQL, con);
+                    SqlDataReader reader;
+
+                    con.Open();
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        ListItem newItem = new ListItem();
+                        newItem.Text = reader["name"].ToString();
+                        newItem.Value = "";
+                        lstSubjects.Items.Add(newItem);
+                    }
+                }
+                catch (Exception error)
+                {
+                    lblError.Text = error.Message;
+                    lblError.ForeColor = System.Drawing.Color.Red;
+                }
+
             }
             catch (Exception ex)
             {
@@ -147,26 +185,32 @@ namespace shortNotesApp
         // combined maths search
         [System.Web.Services.WebMethod]
         [System.Web.Script.Services.ScriptMethod]
-        public static List<string> GetCombinedSuggestions(string prefixText, int count)
+        public static List<string> GetSuggestions(string prefixText, int count,string contextKey)
         {
+
+            // third parameter should be context key
+
+            // making subject name compact
+            string subject = contextKey.Replace(" ", "");
+
             List<string> names = null;
             // Check if the list is in the cache.
-            if (HttpContext.Current.Cache["CombinedMathsList"] == null)
+            if (HttpContext.Current.Cache[$"{subject}List"] == null)
             {
                 // If not, regenerate the list. The ADO.NET code for this part
                 // isn't shown (but you can see it in the downloadable examples
                 // for this chapter.
-                names = GetCombinedTitleListFromDB();
+                names = GetTitleListFromDB(subject);
 
                 // Store the name list in the cache for sixty minutes.
-                HttpContext.Current.Cache.Insert("CombinedMathsList", names, null,
+                HttpContext.Current.Cache.Insert($"{subject}List", names, null,
                   DateTime.Now.AddMinutes(60), TimeSpan.Zero);
 
             }
             else
             {
                 // Get the name list out of the cache.
-                names = (List<string>)HttpContext.Current.Cache["CombinedMathsList"];
+                names = (List<string>)HttpContext.Current.Cache[$"{subject}List"];
 
             }
 
@@ -186,12 +230,12 @@ namespace shortNotesApp
 
 
 
-        private static List<string> GetCombinedTitleListFromDB()
+        private static List<string> GetTitleListFromDB(string subject)
         {
 
             string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
             SqlConnection con = new SqlConnection(connectionString);
-            SqlCommand cmd = new SqlCommand("SELECT Title FROM ShortNotesCombinedMaths", con);
+            SqlCommand cmd = new SqlCommand($"SELECT Title FROM ShortNotes{subject}", con);
 
             List<string> names = new List<string>();
 
@@ -214,141 +258,6 @@ namespace shortNotesApp
             }
         }
 
-        // chemistry search
-        [System.Web.Services.WebMethod]
-        [System.Web.Script.Services.ScriptMethod]
-        public static List<string> GetChemistrySuggestions(string prefixText, int count)
-        {
-            List<string> names = null;
-            // Check if the list is in the cache.
-            if (HttpContext.Current.Cache["ChemistryList"] == null)
-            {
-                // If not, regenerate the list. The ADO.NET code for this part
-                // isn't shown (but you can see it in the downloadable examples
-                // for this chapter.
-                names = GetChemistryTitleListFromDB();
-
-                // Store the name list in the cache for sixty minutes.
-                HttpContext.Current.Cache.Insert("ChemistryList", names, null,
-                  DateTime.Now.AddMinutes(60), TimeSpan.Zero);
-            }
-            else
-            {
-                // Get the name list out of the cache.
-                names = (List<string>)HttpContext.Current.Cache["ChemistryList"];
-
-            }
-
-            List<string> wordList = new List<string>();
-            for (int i = 0; i < names.Count; i++)
-            {
-
-                if (names[i].Contains(prefixText.ToLower()))
-                {
-                    wordList.Add(names[i]);
-                }
-
-            }
-
-            return wordList;
-        }
-
-
-
-        private static List<string> GetChemistryTitleListFromDB()
-        {
-            string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
-            SqlConnection con = new SqlConnection(connectionString);
-            SqlCommand cmd = new SqlCommand("SELECT Title FROM ShortNotesChemistry", con);
-
-            List<string> names = new List<string>();
-
-            try
-            {
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    names.Add((string)reader["Title"]);
-                }
-                reader.Close();
-
-                return names;
-            }
-            finally
-            {
-                con.Close();
-            }
-        }
-
-        // physics search
-        [System.Web.Services.WebMethod]
-        [System.Web.Script.Services.ScriptMethod]
-        public static List<string> GetPhysicsSuggestions(string prefixText, int count)
-        {
-            List<string> names = null;
-            // Check if the list is in the cache.
-            if (HttpContext.Current.Cache["PhysicsList"] == null)
-            {
-                // If not, regenerate the list. The ADO.NET code for this part
-                // isn't shown (but you can see it in the downloadable examples
-                // for this chapter.
-                names = GetPhysicsTitleListFromDB();
-
-                // Store the name list in the cache for sixty minutes.
-                HttpContext.Current.Cache.Insert("PhysicsList", names, null,
-                  DateTime.Now.AddMinutes(60), TimeSpan.Zero);
-            }
-            else
-            {
-                // Get the name list out of the cache.
-                names = (List<string>)HttpContext.Current.Cache["PhysicsList"];
-
-            }
-
-            List<string> wordList = new List<string>();
-            for (int i = 0; i < names.Count; i++)
-            {
-
-                if (names[i].Contains(prefixText.ToLower()))
-                {
-                    wordList.Add(names[i]);
-                }
-
-            }
-
-            return wordList;
-        }
-
-
-
-        private static List<string> GetPhysicsTitleListFromDB()
-        {
-            string connectionString = WebConfigurationManager.ConnectionStrings["Northwind"].ConnectionString;
-            SqlConnection con = new SqlConnection(connectionString);
-            SqlCommand cmd = new SqlCommand("SELECT Title FROM ShortNotesPhysics", con);
-
-            List<string> names = new List<string>();
-
-            try
-            {
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    names.Add((string)reader["Title"]);
-                }
-                reader.Close();
-
-                return names;
-            }
-            finally
-            {
-                con.Close();
-            }
-        }
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
@@ -361,57 +270,21 @@ namespace shortNotesApp
 
                 try
                 {
-                    if (selectedSubject == "Combined Maths")
-                    {
-                        string selectSql = "SELECT * FROM ShortNotesCombinedMaths WHERE Title LIKE @Phrase";
-                        SqlConnection con = new SqlConnection(connectionString);
-                        con.Open();
-                        SqlCommand cmd = new SqlCommand(selectSql, con);
-                        cmd.Parameters.AddWithValue("@Phrase", searchText);
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    string selectSql = $"SELECT * FROM ShortNotes{selectedSubject} WHERE Title LIKE @Phrase";
+                    SqlConnection con = new SqlConnection(connectionString);
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand(selectSql, con);
+                    cmd.Parameters.AddWithValue("@Phrase", searchText);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
-                        // Fill the dtset
-                        adapter.Fill(dtContent, "ShortNotesCombinedMaths");
+                    // Fill the dtset
+                    adapter.Fill(dtContent, $"ShortNotes{selectedSubject}");
 
-                        // Perform the binding
-                        gridShortNotes.DataSource = dtContent;
-                        gridShortNotes.DataBind();
-                        con.Close();
-                    }
-                    else if (selectedSubject == "Chemistry")
-                    {
-                        string selectSql = "SELECT * FROM ShortNotesChemistry WHERE Title LIKE @Phrase";
-                        SqlConnection con = new SqlConnection(connectionString);
-                        con.Open();
-                        SqlCommand cmd = new SqlCommand(selectSql, con);
-                        cmd.Parameters.AddWithValue("@Phrase", searchText);
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    // Perform the binding
+                    gridShortNotes.DataSource = dtContent;
+                    gridShortNotes.DataBind();
+                    con.Close();
 
-                        // Fill the dtset
-                        adapter.Fill(dtContent, "ShortNotesChemistry");
-
-                        // Perform the binding
-                        gridShortNotes.DataSource = dtContent;
-                        gridShortNotes.DataBind();
-                        con.Close();
-                    }
-                    else if (selectedSubject == "Physics")
-                    {
-                        string selectSql = "SELECT * FROM ShortNotesPhysics WHERE Title LIKE @Phrase";
-                        SqlConnection con = new SqlConnection(connectionString);
-                        con.Open();
-                        SqlCommand cmd = new SqlCommand(selectSql, con);
-                        cmd.Parameters.AddWithValue("@Phrase", searchText);
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
-                        // Fill the dtset
-                        adapter.Fill(dtContent, "ShortNotesPhysics");
-
-                        // Perform the binding
-                        gridShortNotes.DataSource = dtContent;
-                        gridShortNotes.DataBind();
-                        con.Close();
-                    }
                 }
                 catch (Exception error)
                 {
@@ -429,60 +302,32 @@ namespace shortNotesApp
 
             try
             {
-                if (selectedSubject == "Combined Maths")
-                {
-                    string selectSql = "SELECT * FROM ShortNotesCombinedMaths";
-                    SqlConnection con = new SqlConnection(connectionString);
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand(selectSql, con);
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
-                    // Fill the dtset
-                    adapter.Fill(dtContent, "ShortNotesCombinedMaths");
+                string selectSql = $"SELECT * FROM ShortNotes{selectedSubject}";
+                SqlConnection con = new SqlConnection(connectionString);
+                con.Open();
+                SqlCommand cmd = new SqlCommand(selectSql, con);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
-                    // Perform the binding
-                    gridShortNotes.DataSource = dtContent;
-                    gridShortNotes.DataBind();
-                    con.Close();
-                }
-                else if (selectedSubject == "Chemistry")
-                {
-                    string selectSql = "SELECT * FROM ShortNotesChemistry";
-                    SqlConnection con = new SqlConnection(connectionString);
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand(selectSql, con);
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                // Fill the dtset
+                adapter.Fill(dtContent, $"ShortNotes{selectedSubject}");
 
-                    // Fill the dtset
-                    adapter.Fill(dtContent, "ShortNotesChemistry");
+                // Perform the binding
+                gridShortNotes.DataSource = dtContent;
+                gridShortNotes.DataBind();
+                con.Close();
 
-                    // Perform the binding
-                    gridShortNotes.DataSource = dtContent;
-                    gridShortNotes.DataBind();
-                    con.Close();
-                }
-                else if (selectedSubject == "Physics")
-                {
-                    string selectSql = "SELECT * FROM ShortNotesPhysics";
-                    SqlConnection con = new SqlConnection(connectionString);
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand(selectSql, con);
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
-                    // Fill the dtset
-                    adapter.Fill(dtContent, "ShortNotesPhysics");
-
-                    // Perform the binding
-                    gridShortNotes.DataSource = dtContent;
-                    gridShortNotes.DataBind();
-                    con.Close();
-                }
             }
             catch (Exception error)
             {
                 lblInfo.Text = error.Message;
                 lblInfo.ForeColor = System.Drawing.Color.Red;
             }
+        }
+
+        protected void lstSubjects_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            autoComplete1.ContextKey = lstSubjects.SelectedValue;
         }
     }
 }
