@@ -52,7 +52,7 @@
         });
     </script>
     
-    <!-caching password--->
+    <!--caching password--->
     <script>
         function saveCredentials(username, password) {
             localStorage.setItem("sn_username", username);
@@ -78,7 +78,7 @@
                     <asp:Label runat="server" ID="lblInfo"></asp:Label>
                 </asp:Panel>
 
-                <!-- enabling view state will help retail value of selected item after the postback-->
+                <!-- enabling view state will help retain value of selected item after the postback-->
                 <asp:Panel runat="server" ID="pnlSelect" EnableViewState="true">
                     Subject : 
                     <asp:DropDownList runat="server" ID="lstSubjects" EnableViewState="true"></asp:DropDownList>

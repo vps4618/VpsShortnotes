@@ -5,6 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>User access log</title>
+    <link href="/Content/jquery.mobile-1.4.5.css" rel="stylesheet" />
+    <script type="text/javascript" src="/Scripts/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.mobile-1.4.5.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         iframe[src*="somee.com"],
         script[src*="somee.com"],
@@ -14,10 +18,39 @@
             visibility: hidden !important;
         }
     </style>
+    <style>
+        td {
+            padding: 10px;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .half-height {
+            height: 100vh; /* 50% of the viewport height */
+            box-sizing: border-box;
+            padding: 1em;
+        }
+
+        .scroll-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+            .scroll-container table {
+                width: 100%;
+                /*  min-height:600px; */ /* makes sure scroll appears on small screens */
+            }
+    </style>
+
 </head>
 <body>
-    <form id="form1" runat="server">
-        <div>
+    <form id="form2" runat="server" data-ajax="false">
+        <div data-role="page" data-theme="b">
+            <div data-role="content">
+            </div>
         </div>
     </form>
     <!--script to remove ads-->

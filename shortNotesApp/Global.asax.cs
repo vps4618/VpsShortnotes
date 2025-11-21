@@ -23,6 +23,10 @@ namespace shortNotesApp
 "routes", "~/routes.aspx");
             RouteTable.Routes.MapPageRoute("shortnotes-name-testing",
 "testname", "~/testingName.aspx");
+            RouteTable.Routes.MapPageRoute("subject-adding",
+"addsubjects", "~/AddSubjects.aspx");
+            RouteTable.Routes.MapPageRoute("ads-adding",
+"insertads", "~/InsertAds.aspx");
 
         }
 

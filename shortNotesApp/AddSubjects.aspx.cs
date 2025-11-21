@@ -44,9 +44,22 @@ CREATE TABLE subjects (
   subjectId INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
   name VARCHAR(255) NOT NULL,
   optional1 VARCHAR(255) NOT NULL,
-  optional2 VARCHAR(255) NOT NULL
+  optional2 VARCHAR(255) NOT NULL,
+  CreatedAt DATETIME NOT NULL CONSTRAINT DF_subjects_CreatedAt DEFAULT (GETUTCDATE())
 );
 end
+
+IF OBJECT_ID('dbo.Ads', 'U') IS NULL
+BEGIN
+    CREATE TABLE Ads (
+        AdId INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+        Title NVARCHAR(255) NOT NULL,
+        Message NVARCHAR(MAX) NULL,
+        Link NVARCHAR(1024) NULL,
+        IsActive BIT NOT NULL CONSTRAINT DF_Ads_IsActive DEFAULT (1),
+        CreatedAt DATETIME NOT NULL CONSTRAINT DF_Ads_CreatedAt DEFAULT (GETUTCDATE())
+    );
+END
 ";
                     using (SqlCommand command = new SqlCommand(queryString, connection))
                     {
@@ -58,8 +71,19 @@ end
 
                 if (!IsPostBack)
                 {
-                    LoadGrid();
-                    pnlInsert.Visible = true;
+                    // this help to load credentals at first
+                    string script = @"
+            let uname = localStorage.getItem('sn_username');
+            let pwd = localStorage.getItem('sn_password');
+            if (uname && pwd) {
+                document.getElementById('" + txtUName.ClientID + @"').value = uname;
+                document.getElementById('" + txtPwd.ClientID + @"').value = pwd;
+            }";
+                    ClientScript.RegisterStartupScript(this.GetType(), "loadCredentials", script, true);
+
+
+                    pnlPwd.Visible = true;
+                    pnlInsert.Visible = false;
                     pnlUpdateDelete.Visible = false;
                 }
             }
@@ -74,7 +98,8 @@ end
         {
             string subject = txtSubject.Text;
 
-            if(subject == "") {
+            if (subject == "")
+            {
                 info.Text = "Please enter a subject name";
                 info.ForeColor = System.Drawing.Color.Red;
                 return;
@@ -91,10 +116,10 @@ end
             adapter.Fill(dt);
 
             bool isAlreadyIn = false;
-            
-            foreach(DataRow row in dt.Rows)
+
+            foreach (DataRow row in dt.Rows)
             {
-                if(subject == row[1].ToString() || subject.Replace(" ","") == row[1].ToString().Replace(" ",""))
+                if (subject == row[1].ToString() || subject.Replace(" ", "") == row[1].ToString().Replace(" ", ""))
                 {
                     isAlreadyIn = true;
                 }
@@ -233,7 +258,7 @@ end
 
             foreach (DataRow row in dt1.Rows)
             {
-                if (subject == row[1].ToString() || subject.Replace(" ", "") == row[1].ToString().Replace(" ",""))
+                if (subject == row[1].ToString() || subject.Replace(" ", "") == row[1].ToString().Replace(" ", ""))
                 {
                     isAlreadyIn = true;
                 }
@@ -260,19 +285,19 @@ end
             adapter.Fill(dt);
             con1.Close();
 
-            string prevSubjectNameTrimmed = dt.Rows[0][1].ToString().Replace(" ","").Trim().Replace("]", "").Replace("[", "").Replace(";", "");
+            string prevSubjectNameTrimmed = dt.Rows[0][1].ToString().Replace(" ", "").Trim().Replace("]", "").Replace("[", "").Replace(";", "");
             prevSubjectNameTrimmed = "ShortNotes" + prevSubjectNameTrimmed;
             // for update   shortnotes table
             string subjectNameTrimmed = txtSubjectName.Text.Replace(" ", "");
-            subjectNameTrimmed= subjectNameTrimmed.Trim();
+            subjectNameTrimmed = subjectNameTrimmed.Trim();
             subjectNameTrimmed = subjectNameTrimmed.Replace("]", "").Replace("[", "").Replace(";", "");
             subjectNameTrimmed = "ShortNotes" + subjectNameTrimmed;
 
-            string updateSql = $"UPDATE subjects SET name=@name WHERE subjectId=@id; EXEC sp_rename {prevSubjectNameTrimmed},{subjectNameTrimmed};";
+            string updateSql = $"UPDATE subjects SET name=@name,CreatedAt=GETUTCDATE() WHERE subjectId=@id; EXEC sp_rename {prevSubjectNameTrimmed},{subjectNameTrimmed};";
 
             SqlConnection con = new SqlConnection(conString);
             con.Open();
-            SqlCommand cmd = new SqlCommand(updateSql,con);
+            SqlCommand cmd = new SqlCommand(updateSql, con);
 
             cmd.Parameters.AddWithValue("@name", txtSubjectName.Text);
             cmd.Parameters.AddWithValue("@id", lstIds.SelectedItem.Text);
@@ -281,7 +306,7 @@ end
             int updated = 0;
             try
             {
-                if(con.State == ConnectionState.Closed)
+                if (con.State == ConnectionState.Closed)
                 {
                     con.Open();
                 }
@@ -290,7 +315,8 @@ end
                 info.ForeColor = System.Drawing.Color.Blue;
                 LoadGrid();
                 initializeViewDeletePanel();
-            }catch(Exception err)
+            }
+            catch (Exception err)
             {
                 info.Text = "Error updating subject and renaming table.";
                 info.Text += err.Message;
@@ -387,6 +413,30 @@ end
 
             txtSubjectName.Text = dt.Rows[0][1].ToString();
             con.Close();
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            string pwd = txtPwd.Text;
+            string uName = txtUName.Text;
+            string password = WebConfigurationManager.ConnectionStrings["Password"].ConnectionString;
+            string username = WebConfigurationManager.ConnectionStrings["Username"].ConnectionString;
+            if (password == txtPwd.Text && username == txtUName.Text)
+            {
+                pnlInsert.Visible = true;
+                pnlPwd.Visible = false;
+                pnlUpdateDelete.Visible = false;
+                LoadGrid();
+
+                // Call JS to save
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "saveCreds",
+                    $"saveCredentials('{txtUName.Text}','{txtPwd.Text}');", true);
+            }
+            else
+            {
+                lblInfo.Text = "Incorrect username or password.";
+                lblInfo.ForeColor = System.Drawing.Color.Red;
+            }
         }
     }
 }

@@ -92,6 +92,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="InsertShortNotes.aspx" />
+    <Content Include="InsertAds.aspx" />
     <Content Include="loginToViewLog.aspx" />
     <Content Include="routes.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -127,7 +128,9 @@
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="ads-toast.js" />
     <Content Include="ShortNotesMain.aspx" />
+    <Content Include="ShortNotesMainJsLogic.js" />
     <Content Include="testingName.aspx" />
     <Content Include="to-do.txt" />
     <Content Include="user_access_log.aspx" />
@@ -151,6 +154,13 @@
     </Compile>
     <Compile Include="InsertShortNotes.aspx.designer.cs">
       <DependentUpon>InsertShortNotes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InsertAds.aspx.cs">
+      <DependentUpon>InsertAds.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InsertAds.aspx.designer.cs">
+      <DependentUpon>InsertAds.aspx</DependentUpon>
     </Compile>
     <Compile Include="loginToViewLog.aspx.cs">
       <DependentUpon>loginToViewLog.aspx</DependentUpon>
@@ -198,6 +208,7 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery.mobile-1.4.5.min.map" />
+    <Content Include="GetAds.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
