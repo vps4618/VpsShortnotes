@@ -70,6 +70,10 @@
                 sendContactMessage();
             });
 
+            $("#lnkGetUpdates").on("click", function () {
+                subscribePrompt();
+            });
+
             function changeTheme(theme) {
                 // Change page background and content
                 $("[data-role='page']")
@@ -153,8 +157,13 @@
         <div runat="server" data-role="page" id="home" data-theme="b">
             <div data-role="header">
                 Short Notes
-                <!--If data-role='none' then jquery styling not will affect to this element-->
-                <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color: lightgray; background-color: darkslateblue; font-family: 'Segoe UI'; font-style: ">Contact Me (සම්බන්ධ කරගැනීමට)</a>
+                  <div>
+                      <a id="lnkGetUpdates" data-role="none" data-rel="popup" class="ui-btn-right" href="#" style="color:lightgray; background-color:darkslateblue; font-family: 'Segoe UI';margin-right:1vw;padding:1px">Get updates</a>
+                      <!--If data-role='none' then jquery styling not will affect to this element-->
+                      <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color: lightgray; background-color: darkslateblue; font-family: 'Segoe UI'; margin-top:4vh">Contact Me (සම්බන්ධ කරගැනීමට)</a>
+
+                  </div>
+
             </div>
             <asp:Label runat="server" ID="lblError"></asp:Label>
             <div data-role="content">

@@ -148,3 +148,39 @@ function sendContactMessage() {
         alert("Please enter your message.");
     }
 }
+
+function subscribePrompt() {
+    try {
+        var email = prompt("Enter your email to get updates(අලුත් දැනුම එකතු වූ සැනින් දැනගැනීමට email එක ඇතුලත් කරන්න) :");
+        if (!email) return;
+
+        // basic client-side validation
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!re.test(email)) {
+            alert("Please enter a valid email.වැරදි ලිපිනයකි.");
+            return;
+        }
+
+        // send via fetch POST
+        fetch('Subscribe.ashx', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'email=' + encodeURIComponent(email)
+        }).then(function (resp) {
+            return resp.json();
+        }).then(function (data) {
+            if (data && data.success) {
+                alert("Thanks — you've been subscribed! සාර් ථකව ලිපිනය එක්කරන ලදි.");
+            } else {
+                alert("Subscription failed: " + (data && data.message ? data.message : "Unknown error"));
+            }
+        }).catch(function () {
+            alert("Network error while subscribing.");
+        });
+    } catch (e) {
+        console.error(e);
+        alert("Error while subscribing.");
+    }
+}

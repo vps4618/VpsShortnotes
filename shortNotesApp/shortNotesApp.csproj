@@ -209,6 +209,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery.mobile-1.4.5.min.map" />
     <Content Include="GetAds.ashx" />
+    <Content Include="Subscribe.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

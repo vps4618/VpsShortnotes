@@ -59,9 +59,25 @@ BEGIN
         IsActive BIT NOT NULL CONSTRAINT DF_Ads_IsActive DEFAULT (1),
         CreatedAt DATETIME NOT NULL CONSTRAINT DF_Ads_CreatedAt DEFAULT (SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30'))
     );
+
+    INSERT INTO Ads (Title,Message,Link,IsActive) VALUES ('dummyTitle','dumMsg','dummylink.html',0);
+
 END
 
-INSERT INTO Ads (Title,Message,Link,IsActive) VALUES ('dummyTitle','dumMsg','dummylink.html',0);
+
+IF OBJECT_ID('dbo.Subscribers', 'U') IS NULL
+BEGIN
+    CREATE TABLE Subscribers
+    (
+      SubscriberId INT IDENTITY(1,1) PRIMARY KEY,
+      Email NVARCHAR(256) NOT NULL,
+      CreatedAt DATETIME NOT NULL DEFAULT (SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30')),
+      IsConfirmed BIT NOT NULL DEFAULT 0
+    );
+
+    CREATE UNIQUE INDEX IX_Subscribers_Email ON Subscribers (Email);
+END
+
 ";
                     using (SqlCommand command = new SqlCommand(queryString, connection))
                     {

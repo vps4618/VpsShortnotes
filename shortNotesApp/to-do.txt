@@ -11,3 +11,6 @@ eya hadu bava ad penvanna.
 eya user press kara email dun pasu, email database ekata save vi,
 ad damu vita email evata yayi.
 email ekak user damu pasu e bava apitada message paminiya yuthuya.
+
+
+2.   also send username to ashx file
