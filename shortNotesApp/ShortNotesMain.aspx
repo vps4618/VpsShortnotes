@@ -6,7 +6,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Short Notes</title>
+    <title>Short Notes App</title>
 
     <link href="/Content/jquery.mobile-1.4.5.css" rel="stylesheet" />
     <script type="text/javascript" src="/Scripts/jquery-1.8.0.js"></script>
@@ -16,18 +16,13 @@
         function subjectChanged() {
             var ddl = document.getElementById('<%= lstSubjects.ClientID %>');
             var selectedValue = ddl.options[ddl.selectedIndex].value;
-
+           
             // Get the AutoCompleteExtender control
             var autoCompleteExtender = $find('<%= autoComplete1.ClientID %>');
 
-            // Set the service method based on the selected option
-            if (selectedValue == "1") {
-                autoCompleteExtender.set_serviceMethod("GetCombinedSuggestions");
-            } else if (selectedValue == "2") {
-                autoCompleteExtender.set_serviceMethod("GetChemistrySuggestions");
-            } else if (selectedValue == "3") {
-                autoCompleteExtender.set_serviceMethod("GetPhysicsSuggestions");
-            }
+            
+            autoCompleteExtender.set_serviceMethod("GetSuggestions");
+            
         }
     </script>
 
@@ -308,22 +303,20 @@
                 <!--If data-role='none' then jquery styling not will affect to this element-->
                 <a href="#" data-role="none" data-rel="popup" class="ui-btn-right" id="contactMeLink" style="color: lightgray; background-color: darkslateblue; font-family: 'Segoe UI'; font-style: ">Contact Me (සම්බන්ධ කරගැනීමට)</a>
             </div>
+            <asp:Label runat="server" ID="lblError"></asp:Label>
             <div data-role="content">
                 <div class="half-height">
                     <asp:ScriptManager ID="ScriptManager1" runat="server">
                     </asp:ScriptManager>
                     Subject : 
-            <asp:DropDownList runat="server" ID="lstSubjects" onchange="subjectChanged()">
-                <asp:ListItem Text="Combined Maths" Value="1"></asp:ListItem>
-                <asp:ListItem Text="Chemistry" Value="2"></asp:ListItem>
-                <asp:ListItem Text="Physics" Value="3"></asp:ListItem>
+            <asp:DropDownList runat="server" ID="lstSubjects" OnSelectedIndexChanged="lstSubjects_SelectedIndexChanged" ViewStateMode="Enabled" EnableViewState="true" AutoPostBack="true">
             </asp:DropDownList>
                     Title : 
             <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
                     <asp:Button Text="Search" runat="server" ID="btnSearch" OnClick="btnSearch_Click" />
                     <asp:Button Text="Get All" runat="server" ID="btnGetAll" OnClick="btnGetAll_Click" />
                     <ajaxToolkit:AutoCompleteExtender ID="autoComplete1" runat="server"
-                        TargetControlID="txtName" ServiceMethod="GetCombinedSuggestions" MinimumPrefixLength="0">
+                        TargetControlID="txtName" ServiceMethod="GetSuggestions" MinimumPrefixLength="0" UseContextKey="true" >
                     </ajaxToolkit:AutoCompleteExtender>
 
                     <asp:Label runat="server" ID="lblInfo"></asp:Label>

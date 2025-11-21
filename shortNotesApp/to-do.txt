@@ -1,0 +1,10 @@
+﻿# add sequrity in all pages , with caching
+# add jquery to all pages
+# check all the things working
+# in subjects, i need to remove,update also happen, there also must change table name when pdating
+# message when new subject ad added
+
+# optional - save messages to show users to database(also if emails saved in another table, forward messages to those emails), when they didnt see it (saving that in local storage - look for c# way) ,show that message and their email not in database , ask them for save email  
+
+ priority - 1. message seen through first login
+			2. email
