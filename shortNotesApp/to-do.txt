@@ -5,3 +5,9 @@
 
  priority -
 			2. email
+
+# get updates kiyala link ekak main page hadanna.
+eya hadu bava ad penvanna.
+eya user press kara email dun pasu, email database ekata save vi,
+ad damu vita email evata yayi.
+email ekak user damu pasu e bava apitada message paminiya yuthuya.

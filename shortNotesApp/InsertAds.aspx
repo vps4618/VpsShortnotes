@@ -69,7 +69,7 @@
            
             </div>
             <div data-role="content">
-                <asp:SqlDataSource ID="sourceAds" runat="server" ProviderName="System.Data.SqlClient" ConnectionString="<%$ ConnectionStrings:Northwind %>" SelectCommand="SELECT * FROM Ads" UpdateCommand="UPDATE Ads SET Title=@Title,Message=@Message,Link=@Link,IsActive=@IsActive,CreatedAt=GETUTCDATE() WHERE AdId=@AdId" DeleteCommand="DELETE Ads WHERE AdId=@AdId" InsertCommand="INSERT INTO Ads (Title,Message,Link,IsActive,CreatedAt) VALUES (@Title,@Message,@Link,@IsActive,GETUTCDATE())" OnUpdated="sourceAds_Updated" OnInserted="sourceAds_Inserted" OnDeleted="sourceAds_Deleted" OnSelected="sourceAds_Selected"></asp:SqlDataSource>
+                <asp:SqlDataSource ID="sourceAds" runat="server" ProviderName="System.Data.SqlClient" ConnectionString="<%$ ConnectionStrings:Northwind %>" SelectCommand="SELECT * FROM Ads" UpdateCommand="UPDATE Ads SET Title=@Title,Message=@Message,Link=@Link,IsActive=@IsActive,CreatedAt= SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30') WHERE AdId=@AdId" DeleteCommand="DELETE Ads WHERE AdId=@AdId" InsertCommand="INSERT INTO Ads (Title,Message,Link,IsActive,CreatedAt) VALUES (@Title,@Message,@Link,@IsActive, SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30'))" OnUpdated="sourceAds_Updated" OnInserted="sourceAds_Inserted" OnDeleted="sourceAds_Deleted" OnSelected="sourceAds_Selected"></asp:SqlDataSource>
                 <asp:Panel runat="server" ID="pnlPwd">
                     UserName : 
                    

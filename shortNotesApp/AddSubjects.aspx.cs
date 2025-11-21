@@ -45,7 +45,7 @@ CREATE TABLE subjects (
   name VARCHAR(255) NOT NULL,
   optional1 VARCHAR(255) NOT NULL,
   optional2 VARCHAR(255) NOT NULL,
-  CreatedAt DATETIME NOT NULL CONSTRAINT DF_subjects_CreatedAt DEFAULT (GETUTCDATE())
+  CreatedAt DATETIME NOT NULL CONSTRAINT DF_subjects_CreatedAt DEFAULT (SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30'))
 );
 end
 
@@ -57,9 +57,11 @@ BEGIN
         Message NVARCHAR(MAX) NULL,
         Link NVARCHAR(1024) NULL,
         IsActive BIT NOT NULL CONSTRAINT DF_Ads_IsActive DEFAULT (1),
-        CreatedAt DATETIME NOT NULL CONSTRAINT DF_Ads_CreatedAt DEFAULT (GETUTCDATE())
+        CreatedAt DATETIME NOT NULL CONSTRAINT DF_Ads_CreatedAt DEFAULT (SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30'))
     );
 END
+
+INSERT INTO Ads (Title,Message,Link,IsActive) VALUES ('dummyTitle','dumMsg','dummylink.html',0);
 ";
                     using (SqlCommand command = new SqlCommand(queryString, connection))
                     {
@@ -293,7 +295,7 @@ end
             subjectNameTrimmed = subjectNameTrimmed.Replace("]", "").Replace("[", "").Replace(";", "");
             subjectNameTrimmed = "ShortNotes" + subjectNameTrimmed;
 
-            string updateSql = $"UPDATE subjects SET name=@name,CreatedAt=GETUTCDATE() WHERE subjectId=@id; EXEC sp_rename {prevSubjectNameTrimmed},{subjectNameTrimmed};";
+            string updateSql = $"UPDATE subjects SET name=@name,CreatedAt=SWITCHOFFSET(TODATETIMEOFFSET(GETUTCDATE(), '+00:00'), '+05:30') WHERE subjectId=@id; EXEC sp_rename {prevSubjectNameTrimmed},{subjectNameTrimmed};";
 
             SqlConnection con = new SqlConnection(conString);
             con.Open();
