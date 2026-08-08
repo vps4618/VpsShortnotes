@@ -151,6 +151,7 @@ function sendContactMessage() {
 
 function subscribePrompt() {
     try {
+        let name = localStorage.getItem('userName');
         var email = prompt("Enter your email to get updates(අලුත් දැනුම එකතු වූ සැනින් දැනගැනීමට email එක ඇතුලත් කරන්න) :");
         if (!email) return;
 
@@ -167,7 +168,7 @@ function subscribePrompt() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'email=' + encodeURIComponent(email)
+            body: 'email=' + encodeURIComponent(email) + '&username=' + encodeURIComponent(name)
         }).then(function (resp) {
             return resp.json();
         }).then(function (data) {

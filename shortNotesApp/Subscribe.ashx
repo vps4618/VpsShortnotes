@@ -14,6 +14,7 @@ public class SubscribeHandler : IHttpHandler
         try
         {
             string email = (context.Request.Form["email"] ?? "").Trim();
+            string username = (context.Request.Form["username"] ?? "").Trim();
 
             if (string.IsNullOrEmpty(email) || !IsValidEmail(email))
             {
@@ -34,7 +35,7 @@ public class SubscribeHandler : IHttpHandler
             }
 
             // Notify owner by email
-            SendOwnerNotification(email);
+            SendOwnerNotification(email,username);
 
             context.Response.Write("{\"success\":true,\"message\":\"Subscribed\"}");
         }
@@ -52,7 +53,7 @@ public class SubscribeHandler : IHttpHandler
         return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
 
-    private void SendOwnerNotification(string subscriberEmail)
+    private void SendOwnerNotification(string subscriberEmail,string username)
     {
         try
         {
@@ -76,7 +77,7 @@ public class SubscribeHandler : IHttpHandler
                   new MailMessage();
             mail.To.Add("vishwapraveen30145@gmail.com");
             mail.Subject = "New subscriber to ShortNotes";
-            mail.Body = $"A user subscribed with email: {subscriberEmail}";
+            mail.Body = $"{username} subscribed with email: {subscriberEmail}";
             mail.From = new MailAddress("vishwapraveen4618@gmail.com");
 
             // From address taken from Web.config mailSettings 'from'.
